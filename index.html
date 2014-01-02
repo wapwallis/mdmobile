@@ -1,0 +1,846 @@
+
+<!DOCTYPE html> 
+<html><head> 
+	<meta charset="utf-8"> 
+
+  	<title>Travel Guide</title> 
+  	<meta name="description" content="">
+  	<meta name="author" content="">
+  
+	<!-- Mobile viewport optimization http://goo.gl/b9SaQ -->
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320"/>
+	
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    
+	<link rel="shortcut icon" href="apple-touch-icon.png">
+	
+    <!-- For iPhone 4 with high-resolution Retina display: -->
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="apple-touch-icon-114x114.png">
+	
+	<!-- For first-generation iPad: -->
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="apple-touch-icon-72x72.png">
+	
+	<!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+	<link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png">
+	
+    
+    
+    
+    <!-- startup image for web apps - iPad - landscape (748x1024) 
+     Note: iPad landscape startup image has to be exactly 748x1024 pixels (portrait, with contents rotated).-->
+    <link rel="apple-touch-startup-image" href="Default-Landscape~ipad4.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)" />
+    
+    <!-- startup image for web apps - iPad - portrait (768x1004) -->
+    <link rel="apple-touch-startup-image" href="Default-Portrait~ipad.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)" />
+    
+    <!-- startup image for web apps (320x460) -->
+    <link rel="apple-touch-startup-image" href="Default.png" media="screen and (max-device-width: 320px)" />
+    
+    
+  
+	<!--iOS web app-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	  
+	<!-- Mobile IE allows us to activate ClearType technology for smoothing fonts for easy reading -->
+	<meta http-equiv="cleartype" content="on">
+	
+ 
+	<!-- css -->
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc1/jquery.mobile-1.0rc1.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/md.css" /> 
+	<link rel="stylesheet" type="text/css" href="css/sprites.css" /> 
+	
+	<script src="phonegap-1.1.0.js"></script>
+	<script type="text/javascript">
+	
+		//look for destination id in hash
+		var hashid = "";
+		if (window.location.hash.indexOf("id") != -1) hashid = window.location.hash.replace("#id","");
+	
+		//default show splash
+		var showsplash = true;
+	
+		if ('standalone' in navigator && !navigator.standalone && (/iphone|ipod|ipad/gi).test(navigator.platform) && (/Safari/i).test(navigator.appVersion)) 
+		{
+			var addToHomeConfig = {
+				animationIn:'bubble',		// Animation In
+				animationOut:'drop',		// Animation Out
+				lifespan:10000,				// The popup lives 10 seconds
+				expire:2,					// The popup is shown only once every 2 minutes
+				touchIcon:true,
+				message:'Install this web app on your %device: tap `%icon` and then `<strong>Add to Home Screen</strong>`.'
+			};
+			document.write('<link rel="stylesheet" href="css\/add2home.css">');
+			document.write('<script type="application\/javascript" src="js\/add2home.js"><\/script>');
+		}
+		else if ((/iphone|ipod|ipad/gi).test(navigator.platform))
+		{
+			showsplash = false;
+		}
+	
+	</script>
+	
+	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+	<script type="text/javascript">
+		<!-- Google Analytics -->
+		var _gaq = [['_setAccount', 'UA-22737678-15'], ['_trackPageview']];
+		(function(d, t) {
+		var g = d.createElement(t),
+			s = d.getElementsByTagName(t)[0];
+		g.src = '//www.google-analytics.com/ga.js';
+		s.parentNode.insertBefore(g, s);
+		}(document, 'script'));
+	
+
+		
+		
+		
+	
+		<!-- Init JQuery Mobile -->
+		$(document).bind("mobileinit", function(){
+			//$.mobile.hashListeningEnabled   = false;
+			$.mobile.selectmenu.prototype.options.nativeMenu = false;
+			$.mobile.listview.prototype.options.filterPlaceholder = "Search ...";
+		});
+	</script>
+    <script src="http://code.jquery.com/mobile/1.0rc1/jquery.mobile-1.0rc1.min.js"></script>
+	
+	<script src="js/md.js?v=1"></script> 
+	<script>
+		$(function(){
+		  document.addEventListener("deviceready", init(), false);
+		})
+	</script>
+</head> 
+
+<body> 
+
+	<img id="whoson" height=1 width=1 src="" style="display:none">
+
+	
+	<script id="template_dimages" type="text/html">
+		{{#P}}<li><img src="{{#url}}{{N}}{{/url}}/Pictures/HomePageSlideShow/{{P}}"></li>{{/P}}
+	</script>
+
+	
+	<input type="hidden" id="lat" value=""> 
+	<input type="hidden" id="lng" value="">  
+	<div id="converttotext" class="hidden"></div>
+	
+	<!--Splash -->
+	<div data-role="page" id="splash" class="data-role page-role hidden" data-theme="m" data-title="Travel Guide">
+	  	<div data-role="content" class="content-menu" data-theme="m" style="text-align:center">
+	  		<br clear="all">
+			<img class="logo" src="logo.jpg">
+			<br clear="all">
+			<h2>Loading .... please wait</h2>
+	    	<img class="splashfooter" src="splash_footer.jpg">
+		</div>
+	</div>
+	
+	
+	<!-- Start of welcome page -->
+	<div data-role="page" id="welcome" class="data-role page-role hidden" data-theme="m" data-title="Travel Guide">
+		<div data-role="content" class="content-menu" data-theme="m">
+		
+			<div class="ui-grid-a" style="position: relative; " > 
+				<div class="ui-block-a">
+					<img class="logo left" src="logo.jpg">	
+				</div> 
+				<div class="ui-block-b">
+					<div class="welcome right">
+						<h1>Locally informed</h1>
+						<h1>Globally inspired</h1>
+					</div>
+				</div> 
+			</div>
+			
+			<div class="welcomebar">
+				<h2>Get Started</h2>
+				<a id="nearest" href="javascript:getnearest=true; get_location()" data-role="button" data-icon="refresh" data-iconpos="right"><span id="ndestination">Locate Nearest Destination</span></a>
+				<a href="#destinations-top" data-role="button" data-icon="arrow-r" data-iconpos="right">Select Your Destination</a>	
+			</div>	
+		
+			<img id="welcome_image" src="">		
+		</div>
+	</div>
+
+
+	<!-- Start of home page -->
+	<div data-role="page" id="home" class="data-role page-role hidden" data-theme="m" data-title="Travel Guide">
+		<div data-role="content" class="content-menu" data-theme="d">
+			<div class="destination">		
+				<div id="destination_image">
+				</div>	
+				
+				
+				<div class="destination_logo">
+					<img class="logo left" src="logo.jpg">
+				</div>
+				
+				<div class="destination_header">
+					<a href="#welcome" data-direction="reverse"><b><span id="destination"></span></b>&nbsp;<span id="destination_small">change</span></a>
+				</div>		
+			</div>
+			
+			<div class="businessfinder">
+				<h2>What are you looking for ?</h2>
+				<div id="what_button"></div>
+			</div>		
+		
+			<div class="ui-grid-b"> 
+			
+				<div class="ui-block-a"><a href="#whatson"><div class="ui-bar ui-bar-m"><div class="home_sprites whatson"></div><h2>What's On</h2></div></a></div> 
+				<div class="ui-block-b"><a href="#offers"><div class="ui-bar ui-bar-m"><div class="home_sprites specialoffers"></div><h2>Special Offers</h2></div></a></div> 
+				<div class="ui-block-c"><a href="javascript:getnearmenow=true; get_location()"><div class="ui-bar ui-bar-m"><div class="home_sprites nearme"></div><h2>Near Me Now</h2></div></a></div> 
+				
+				<div class="ui-block-a"><a href="javascript:updateDestinations()"><div class="ui-bar ui-bar-m"><div class="home_sprites travelarticle"></div><h2>Travel Articles</h2></div></a></div> 
+				<div class="ui-block-b"><a href="javascript:getAirports()"><div class="ui-bar ui-bar-m"><div class="home_sprites flightinfo"></div><h2>Flight Info</h2></div></a></div> 
+				<div class="ui-block-c"><a id="weatherlink" href="#weather"><div class="ui-bar ui-bar-m"><div class="home_sprites weather"></div><h2>Weather</h2></div></a></div> 
+					
+			</div>
+		</div>
+		
+		
+	</div>
+	
+
+	<!-- Start of destinations-top page -->
+	<div data-role="page" id="destinations-top" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m"> 
+			<a href="#welcome" data-direction="reverse" data-icon="back">Back</a>
+			<h1>Select Destination</h1> 
+		</div> 
+	
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">	
+					
+				<script id="template_dsearch" type="text/html">
+					<li data-theme="m" name="result">
+						<a href="javascript:void(0)" onClick="getDestination('{{ID}}', '{{N}}')">
+							<div class="roundedCornersDiv">
+								<img class="ui-li-icon" src="{{CDNURL}}Images/HubSite/PlaceImages/{{P}}">
+							</div>
+							<h1>{{N}}</h1>
+						</a>
+					</li>
+				</script>
+				
+						
+				<div id="div-dsearch" data-theme="m">	
+					<ul id="dsearch-listview" data-theme="m" data-role="listview" data-filter="true" data-inset="false"></ul>
+				</div>
+				
+				<div id="div-destinations-listview">
+					<ul id="destinations-listview" data-theme="m" data-role="listview" data-inset="false">
+						<li id="africa">
+							<a href="javascript:void(0)" onClick="set_destination_sub('Africa')">
+								<div id="africa" class="roundedCornersDiv destination_sprites"></div>
+								<h1>Africa</h1>
+							</a>
+						</li>
+						
+						<li id="asia">
+							<a href="javascript:void(0)" onClick="set_destination_sub('Asia')">
+								<div id="asia" class="roundedCornersDiv destination_sprites"></div>
+								<h1>Asia</h1>
+							</a>
+						</li>
+					
+						<li id="europe">
+							<a href="javascript:void(0)" onClick="set_destination_sub('Europe')">
+								<div id="europe" class="roundedCornersDiv destination_sprites"></div>
+								<h1>Europe</h1>
+							</a>
+						</li>
+						
+						<li id="australasia">
+							<a href="javascript:void(0)" onClick="set_destination_sub('Australasia')">
+								<div id="australasia" class="roundedCornersDiv destination_sprites"></div>
+								<h1>Australasia</h1>
+							</a>
+						</li>
+					
+						<li id="north-america">
+							<a href="javascript:void(0)" onClick="set_destination_sub('North America')">
+								<div id="north-america" class="roundedCornersDiv destination_sprites"></div>
+								<h1>North America</h1>
+							</a>
+						</li>
+						
+						<li id="south-america">
+							<a href="javascript:void(0)" onClick="set_destination_sub('South America')">
+								<div id="south-america" class="roundedCornersDiv destination_sprites"></div>
+								<h1>South America</h1>
+							</a>
+						</li>
+						
+						<li id="central-america">
+							<a href="javascript:void(0)" onClick="set_destination_sub('Central America')">
+								<div id="central-america" class="roundedCornersDiv destination_sprites"></div>
+								<h1>Central America</h1>
+							</a>
+						</li>
+						
+						<li id="caribbean">
+							<a href="javascript:void(0)" onClick="set_destination_sub('Caribbean')">
+								<div id="caribbean" class="roundedCornersDiv destination_sprites"></div>
+								<h1>Caribbean</h1>
+							</a>
+						</li>
+						
+						<li id="middle-east">
+							<a href="javascript:void(0)" onClick="set_destination_sub('Middle East')">
+								<div id="middle-east" class="roundedCornersDiv destination_sprites"></div>
+								<h1>Middle East</h1>
+							</a>
+						</li>
+					</ul>		
+				</div>
+			</div>
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+
+
+
+	<div data-role="page" id="destinations-sub" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div  data-role="header" data-theme="m"> 
+			<a href="#destinations-top" data-direction="reverse" data-icon="back">Back</a>
+			<h1 id="destination-sub-title">Select Destination</h1> 
+		</div> 
+		
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">
+			
+				<div id="div-search" data-theme="m">
+					<ul id="africa-listview" data-theme="m" data-role="listview" data-filter="true" data-inset="false"></ul>
+					<ul id="asia-listview" data-inset="false" data-role="listview" data-filter="true" role="listbox"></ul>
+					<ul id="europe-listview" data-inset="false" data-role="listview" data-filter="true" role="listbox"></ul>
+					<ul id="australasia-listview" data-inset="false" data-role="listview" data-filter="true" role="listbox"></ul>
+					<ul id="north-america-listview" data-inset="false" data-role="listview" data-filter="true" role="listbox"></ul>
+					<ul id="south-america-listview" data-inset="false" data-role="listview" data-filter="true" role="listbox"></ul>
+					<ul id="central-america-listview" data-inset="false" data-role="listview" data-filter="true" role="listbox"></ul>
+					<ul id="caribbean-listview" data-inset="false" data-role="listview" data-filter="true" role="listbox"></ul>
+					<ul id="middle-east-listview" data-inset="false" data-role="listview" data-filter="true" role="listbox"></ul>
+				</div>
+			</div>
+		</div>	
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+
+	
+	<!-- Start of offers page -->
+	<script id="template_offers" type="text/html">
+		<li data-theme="m" name="result" class="{{CLASS}}">
+			<a href="javascript:getOffer('{{ID}}')">
+				<div class="roundedCornersDiv">
+					<img src="{{THUMBNAIL}}">
+				</div>
+				<h2>{{COMPANYNAME}} - {{LABEL}}</h2>
+				<h3>Type: {{MAINCATEGORY}}\{{SUBCATEGORY}}</h3>
+				<h3>Expires: {{DAYS}} day(s) left</h3>
+				<p>{{TEXT}}</p>
+			</a>
+		</li> 
+	</script>
+	<div data-role="page" id="offers" class="data-role page-role hidden" data-theme="m" data-title="Travel Guide">
+		<div data-role="header" data-theme="m">
+			<a href="#home" data-direction="reverse" data-icon="home">Home</a>
+			<h1>Special Offers</h1>
+		</div>
+	
+		<div data-role="content" data-theme="m">	
+			<ul id="offers-listview" data-theme="m" data-role="listview" data-inset="false"></ul>
+			<a id="offers_more" class="odd hidden" href="javascript:getOffers(true)" data-role="button" data-iconpos="noicon"><br>Load More ...<br><br></a>	
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+	
+	
+
+	
+	<!-- Start of offer page -->
+	<div data-role="page" id="offer" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m">
+			<a href="#offers" data-direction="reverse" data-icon="back">Back</a>
+			<h1 class="offertitle"></h1>
+		</div>
+	
+		<div id="offerbody" data-role="content" data-theme="m">
+		</div>
+		
+		<a href="#offervoucher" data-theme="o" data-role="button">Show this voucher</a>
+		<br>
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+	
+	
+	<!-- Start of offervoucher page -->
+	<script id="template_offervoucher" type="text/html">
+		<h1>{{COMPANYNAME}}</h1>
+		<h2>{{LABEL}}</h2>
+		<p>{{TEXT}}</p>
+		<h3><b>Valid:</b> {{VALID}}</h3>
+		<h3><b>Restrictions:</b> {{RESTRICTIONS}}</h3>	
+	</script>
+	<div data-role="page" id="offervoucher" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m">
+			<a href="#offer" data-direction="reverse" data-icon="back">Back</a>
+			<h1></h1>
+		</div>
+	
+		<div id="offervoucherbody" data-role="content" class="content-menu" data-theme="m">
+			<h2>Please present this offer from</h2>
+			<img class="logo" src="logo.jpg">
+			
+			<div id="voucherdetails">
+				<h1>Garum</h1>
+				<h2>Free Irish Coffee</h2>
+				<p>Present this voucher and receive a free irish coffee after your dinner or lunch at Garum</p>
+				<h3><b>Valid:</b> 8 Sep 2011 - 8 Oct 2011</h3>
+				<h3><b>Restrictions:</b> Try to book your tabel in advance!</h3>
+			</div>
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+	
+	
+	
+	<!-- Start of whats on page -->
+	<div data-role="page" id="whatson" class="data-role page-role hidden" data-theme="m" data-title="Travel Guide">
+		<div data-role="header" data-theme="m">
+			<a href="#home" data-direction="reverse" data-icon="home">Home</a>
+			<h1>What's On</h1>
+		</div>
+	
+		<div data-role="content" data-theme="m">
+			<ul id="whatson-listview-featured" data-theme="m" data-role="listview" data-inset="false"></ul>
+			<ul id="whatson-listview" data-theme="m" data-role="listview" data-inset="false"></ul>
+			<a id="whatson_more" class="odd hidden"  href="javascript:getEvents(true)" data-role="button" data-iconpos="noicon"><br>Load More ...<br><br></a>		
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+	
+	
+	<!-- Start of event page -->
+	<div data-role="page" id="event" data-theme="m"  class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m">
+			<a id="back-event" href="#" data-direction="reverse" data-icon="back">Back</a>
+			<h1 id="eventtitle">What's On</h1>
+		</div>
+	
+		<div id="eventbody" data-role="content" data-theme="m">
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+
+
+
+
+
+
+	<!-- Start of destinations-top page -->
+	<div data-role="page" id="search" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m"> 
+			<a href="#home" data-direction="reverse" data-icon="home">Home</a>
+			<h1>Search</h1> 
+		</div> 
+	
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">
+				<ul id="searchcompany-listview" data-theme="m" data-role="listview" data-filter="true" data-inset="false">
+				</ul>	
+				
+				
+				<div id="div-categories">	
+				</div>
+			</div>
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+
+	
+	<div data-role="page" id="results" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m">
+			<a href="#search" data-direction="reverse" data-icon="back">Back</a>
+			<h1 class="results-title-txt"></h1> 
+			<a href="#" id="settings" onClick="filter()" data-icon="arrow-d" data-iconpos="left">Refine</a>
+		</div> 
+		
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">
+			
+				<ul id="searchcompany2-listview" data-theme="m" data-role="listview" data-filter="true" data-inset="false">
+				</ul>		
+				
+				<div id="div-filter" data-theme="m" style="display:none">	
+					<ul id="filter-listview" data-theme="m" data-role="listview"  data-filter="false" data-inset="false">
+						<li data-theme="m"><a data-theme="m" id="ftype" href="#filter-type" >Type (All)</a></li>
+						<li data-theme="m"><a data-theme="m" id="flocation" href="#filter-location">Location (All)</a></li>				
+						<li data-theme="m"><a data-theme="m" id="fsortby" href="#filter-sortby">Sort By (Default)</a></li>
+					</ul>	
+					<br>	
+				</div>
+			
+				<div id="div-results-listview">
+					<ul id="results-listview" data-theme="m" data-role="listview" data-inset="false">
+					</ul>		
+					<a id="results_more" class="odd hidden" href="javascript:getCategoryId(current_category_id,true,'')" data-role="button" data-iconpos="noicon"><br>Load More ...<br><br></a>
+				</div>
+			</div>
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	<div data-role="page" id="filter-location" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m"> 
+			<a href="#results" data-direction="reverse" data-icon="back">Back</a>
+			<h1>Select Location</h1> 
+		</div> 
+		
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">
+				
+				
+				<div id="div-dfilter" data-theme="m"></div>
+
+			</div>
+		</div>
+	</div>
+	
+	
+	<div data-role="page" id="filter-type" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m"> 
+			<a href="#results" data-direction="reverse" data-icon="back">Back</a>
+			<h1>Select Type</h1> 
+		</div> 
+		
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">
+				<div id="div-tfilter" data-theme="m">
+					<ul id="tfilter-listview" data-theme="m" data-role="listview" data-filter="false" data-inset="false"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div data-role="page" id="filter-sortby" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m"> 
+			<a href="#results" data-direction="reverse" data-icon="back">Back</a>
+			<h1>Sort By</h1> 
+		</div> 
+		
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">
+				<div id="div-sfilter" data-theme="m">
+					<ul id="sfilter-listview" data-theme="m" data-role="listview" data-filter="false" data-inset="false">
+						<li data-theme="m"><a href="javascript:void(0)" onClick="setfilter('sortby','name','')">A-Z</a></li>
+						<li data-theme="m"><a href="javascript:void(0)" onClick="setfilter('sortby','creation','')">Most Recent</a></li>
+					</ul>		
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	<!-- Start of whats on page -->
+	<div data-role="page" id="company" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m">
+			<a id="back-company" href="#" data-direction="reverse" data-icon="back">Back</a>
+			<h1 class="results-title-txt"></h1>
+		</div>
+	
+		<div id="companybody" data-role="content" data-theme="m">
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+
+
+
+	<!-- Start of whats on page -->
+	<div data-role="page" id="directions" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m">
+			<a href="#company" data-direction="reverse" data-icon="back">Back</a>
+			<h1 id="directionstitle">Directions</h1>
+			<a href="javascript:void(0);" onClick="getdirections=true; get_location()" data-icon="refresh">Refresh</a>
+		</div>
+	
+		<div id="directionsbody" data-role="content" data-theme="m">
+			 <div id="map_canvas" style="width:100%; height:300px">
+			 </div>
+			 
+			 <div id="directionsPanel">
+			 </div>
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+	
+	
+	<script id="template_airports" type="text/html">
+		<li id="{{LABEL}}" class="{{CLASS}}">
+			<a href="javascript:void(0)" onClick="current_airport='{{LABEL}}'; current_airportcode='{{CODE}}'; setFlights()">
+			<h1>{{LABEL}}</h1>
+			</a>
+		</li>
+	</script>
+	
+	
+	<!-- Start of destinations-top page -->
+	<div data-role="page" id="airports" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m"> 
+			<a href="#home" data-direction="reverse" data-icon="back" data-theme="m">Back</a>
+			<h1>Flight Info</h1> 
+		</div> 
+	
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">	
+				<div id="div-airports-listview">
+					<ul id="airports-listview" data-theme="m" data-role="listview" data-inset="false">
+					</ul>		
+				</div>
+				
+			</div>
+		</div>
+	
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+	
+	
+	
+	<div data-role="page" id="airport" class="data-role page-role hidden" data-theme="m" data-title="Travel Guide">
+		<div data-role="header" data-theme="m"> 
+			<a href="#airports" data-direction="reverse" data-icon="back">Airports</a>
+			<h1 id="flights-title"></h1> 
+			<a href="#" onClick="getFlights();" data-icon="refresh" data-iconpos="right">Refresh</a>
+		</div> 
+		
+		
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">
+		
+			<div id="flight-top">
+			
+				<div id="departures">	
+					<div class="flight-toggle">
+						<div class="ui-grid-a"> 
+							<div class="ui-block-a"><h2>Departures</h2><div id="departures_icon"></div></div> 
+							<a href="#" onClick="showArrivals()">
+							<div class="ui-block-b"><h2>Arrivals</h2><div id="arrivals_icon"></div></div> 
+							</a>
+						</div>
+					</div>
+					
+					<div class="ui-grid-c">
+						<div class="ui-block-a"><div class="border"><h2>Flight</h2></div></div> 
+						<div class="ui-block-b"><div class="border"><h2>Time</h2></div></div> 
+						<div class="ui-block-c"><div class="border"><h2>Status</h2></div></div> 
+						<div class="ui-block-d"><h2>To</h2></div> 
+					</div>
+				</div>
+				
+				
+				<div id="arrivals" style="display:none">	
+					<div class="flight-toggle">
+						<div class="ui-grid-a"> 
+							<a href="#" onClick="showDepartures()">
+							<div class="ui-block-a"><h2>Departures</h2><div id="departures_icon"></div></div> 
+							</a>
+							<div class="ui-block-b"><h2>Arrivals</h2><div id="arrivals_icon"></div></div> 
+						</div>
+					</div>
+					
+					<div class="ui-grid-c">
+						<div class="ui-block-a"><div class="border"><h2>Flight</h2></div></div> 
+						<div class="ui-block-b"><div class="border"><h2>Time</h2></div></div> 
+						<div class="ui-block-c"><div class="border"><h2>Status</h2></div></div> 
+						<div class="ui-block-d"><h2>From</h2></div> 
+					</div>
+				</div>
+			
+			
+			</div>
+			
+			<script id="template_flight" type="text/html">
+				<li id="li-{{F}}" data-theme="m" class="{{CLASS}}" name="result" data-icon="arrow-d" data-iconpos="left">
+					<a href="javascript:void(0)" onClick="toggleflight('{{F}}')">
+						<div class="ui-grid-c"> 
+							<div class="ui-block-a"><h2>{{F}}</h2></div> 
+							<div class="ui-block-b"><h2>{{TIME}}</h2></div>
+							<div class="ui-block-c"><h2><span class="{{STATUSCOL}}">{{STATUS}}</span></h2></div>  
+							<div class="ui-block-d"><h2>{{AIRPORTCODE}}</h2></div> 
+						</div>
+						
+						<div id="div-{{F}}" style="display:none">
+							<h2><b>({{OC}}) {{OJ}}</b></h2>
+							<h2>Departing{{DT}} @ {{DD}}</h2>
+							<h2><b>({{DC}}) {{D}}</b></h2>
+							<h2>Arriving{{AT}} @ {{AD}}</h2>
+						</div>
+					</a>
+				</li>
+			</script>
+	
+				<div id="div-airport-listview" data-theme="m">	
+                    <ul id="departures-listview" data-theme="m" data-role="listview" data-filter="false" data-inset="false"></ul>
+                    
+                    <ul id="arrivals-listview" data-theme="m" data-role="listview" data-filter="false" data-inset="false" style="display:none"></ul>	
+				</div>
+			</div>
+		</div>
+	
+	
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+	
+
+	
+
+	
+	<!-- Start of weather page -->
+	<div data-role="page" id="weather" class="data-role page-role hidden" data-theme="m" data-title="Travel Guide">
+		<div data-role="header" data-theme="m">
+			<a href="#home" data-icon="home" data-direction="reverse" data-theme="m">Home</a>
+			<h1>Weather</h1>
+			<a id="toggle_weather" href="javascript:void(0);" onClick="toggle_weather()" data-icon="arrow-r" data-iconpos="right">&deg;C / &deg;F</a>
+		</div>
+	
+		<div data-role="content" data-theme="m">	
+			<div id="weather_title" class="ui-grid-b">
+			</div>
+			
+			<ul id="weather-listview" data-theme="m" data-role="listview" data-inset="false" >
+			</ul>	
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+	
+    
+    <script id="template_weather-location" type="text/html">
+		<li data-theme="m" data-icon="check" name="result">
+			<a href="javascript:setWeather('{{titleslash}}','{{code}}',true)">
+				<h1 class="ui-li-heading">{{title}}</h1>
+			</a>
+		</li>
+	</script>
+    <div data-role="page" id="weather-location" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m"> 
+			<h1>Weather Location</h1> 
+		</div> 
+		
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">
+				<ul id="weather-location-listview" data-theme="m" data-role="listview" data-inset="false" >
+				</ul>
+			</div>
+		</div>
+	</div>
+    
+    
+	
+	<!-- Start of near me now page -->
+	<script id="template_companies" type="text/html">
+		<h2 style="float:left">{{LABEL}} </h2><div id="change" class="{{CHANGE}}"><a href="#nearme-selectcategory"><h2><u>Change</u></h2></a></div>
+		<div data-scroll="x" class="threeByThree">
+			{{#ITEMS}}
+				<a href="javascript:{{FUNCTION}}('{{ID}}')">
+					<div class="square">
+						<div class="square_txt">{{#distance}}{{DIST}}{{/distance}}<br>{{LABEL}}</div>
+						<img src="{{THUMBPATH}}{{THUMB}}">
+					</div>
+				</a>
+			{{/ITEMS}}
+		</div>
+	</script>
+    
+  
+	<div data-role="page" id="nearme" class="data-role page-role hidden" data-theme="m" data-title="Travel Guide">
+		<div data-role="header" data-theme="m">
+			<a href="#home" data-direction="reverse" data-icon="home">Home</a>
+			<h1>Near Me Now</h1>
+			<a href="javascript:void(0);" onClick="getnearmenow=true; get_location()" data-icon="refresh">Refresh</a>
+		</div>
+
+		
+		<div id="nearmenow_category" data-scroll="y" data-role="content"  data-theme="m">
+		</div>
+	
+		<div id="nearmenow" data-scroll="y" data-role="content"  data-theme="m">
+		</div>
+		
+		<div data-role="footer" data-theme="m" data-position="fixed"> 
+			<div class="home_sprites poweredby"></div> 
+		</div>
+	</div>
+	
+    
+    <div data-role="page" id="nearme-selectcategory" data-theme="m" class="data-role page-role hidden" data-title="Travel Guide">
+		<div data-role="header" data-theme="m"> 
+			<a href="#nearme" data-direction="reverse" data-icon="back">Back</a>
+			<h1>Select Category</h1> 
+		</div> 
+		
+		<div data-role="content" data-theme="m">
+			<div class="content-primary">
+				<div id="div-cfilter" data-theme="m">
+					<ul id="cfilter-listview" data-theme="m" data-role="listview" data-filter="false" data-inset="false"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+    
+	<script src="http://maps.googleapis.com/maps/api/js?sensor=true" type="text/javascript"></script>
+    
+</body> 
+</html> 
